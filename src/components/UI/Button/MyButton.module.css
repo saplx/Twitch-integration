@@ -1,0 +1,12 @@
+.MyButton {
+  padding: 10px;
+  max-width: 150px;
+  width: 100%;
+  background: transparent;
+  border: solid 2px teal;
+  cursor: pointer;
+}
+
+.MyButton:hover {
+  background: teal;
+}
