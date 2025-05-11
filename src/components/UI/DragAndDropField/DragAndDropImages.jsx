@@ -1,4 +1,4 @@
-const DragAndDropImages = ({ images, setImages }) => {
+const DragAndDropImages = ({ setImages }) => {
   const handleDrop = (e) => {
     e.preventDefault();
     handleFiles(e.dataTransfer.files);
@@ -8,7 +8,8 @@ const DragAndDropImages = ({ images, setImages }) => {
     const files = Array.from(fileList).filter((f) =>
       f.type.startsWith("image/")
     );
-    setImages((prev) => [...prev, ...files]);
+    const urls = files.map((file) => URL.createObjectURL(file));
+    setImages((prev) => [...prev, ...urls]);
   };
 
   return (
@@ -23,7 +24,6 @@ const DragAndDropImages = ({ images, setImages }) => {
         accept="image/*"
         multiple
         onChange={(e) => handleFiles(e.target.files)}
-        placeholder=""
       />
     </div>
   );
