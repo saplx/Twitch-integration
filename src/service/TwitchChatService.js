@@ -7,7 +7,7 @@ export default class TwitchChatService {
     this.client = new tmi.Client({
       options: {
         debug: false,
-        skipUpdatingEmotesets: true, // Отключаем Kraken-эмотиконы :contentReference[oaicite:3]{index=3}
+        skipUpdatingEmotesets: true,
       },
       connection: { reconnect: true },
       identity: { username, password: `oauth:${token}` },

@@ -8,12 +8,18 @@ export default function VotingImages({ leftSrc, rightSrc, onVote }) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.imageWrapper} onClick={() => handleClick("left")}>
+      <button
+        className={styles.imageWrapper}
+        onClick={() => handleClick(leftSrc)}
+      >
         <img src={leftSrc} alt="Left option" className={styles.image} />
-      </div>
-      <div className={styles.imageWrapper} onClick={() => handleClick("right")}>
+      </button>
+      <button
+        className={styles.imageWrapper}
+        onClick={() => handleClick(rightSrc)}
+      >
         <img src={rightSrc} alt="Right option" className={styles.image} />
-      </div>
+      </button>
     </div>
   );
 }
