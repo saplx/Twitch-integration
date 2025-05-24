@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import MyButton from "./UI/Button/MyButton";
-import VotingImages from "./UI/VotingImages/VotingImages";
+import VotingImages from "./VotingImages";
 
-const Tournament = ({ images }) => {
+const Tournament = ({ images, descriptions }) => {
   const [currentRound, setCurrentRound] = useState(images);
   const [nextRound, setNextRound] = useState([]);
   const [winner, setWinner] = useState(null);
   const [pairIndex, setPairIndex] = useState(0);
 
-  const totalRounds = Math.ceil(Math.log2(images.length));
+  const totalRounds = Math.ceil(images.length / 2);
 
   const handleSelect = (selected) => {
     const updatedNextRound = [...nextRound, selected];
@@ -27,28 +27,35 @@ const Tournament = ({ images }) => {
     }
   };
 
-  const left = currentRound[pairIndex];
-  const right = currentRound[pairIndex + 1];
+  const leftImg = currentRound[pairIndex];
+  const rightImg = currentRound[pairIndex + 1];
 
   useEffect(() => {
-    if (left && !right) {
-      handleSelect(left);
+    if (leftImg && !rightImg) {
+      handleSelect(leftImg);
     }
   }, [currentRound, pairIndex]);
 
   if (winner) {
     return (
-      <div>
-        <h1>Победитель!</h1>
-        <img src={winner} alt="Победитель" />
+      <div style={{ alignItems: "center" }}>
+        <h1>Победители</h1>
+        <img style={{ maxWidth: 800 }} src={winner} alt="Победитель" />
       </div>
     );
   }
 
   return (
     <>
+      <h1>{`Раунд ${pairIndex / 2 + 1} из ${totalRounds}`}</h1>
       <div className="content">
-        <VotingImages leftSrc={left} rightSrc={right} onVote={handleSelect} />
+        <VotingImages
+          leftSrc={leftImg}
+          rightSrc={rightImg}
+          onVote={handleSelect}
+        />
+        <div>{descriptions[pairIndex]}</div>
+        <div>{descriptions[pairIndex]}</div>
       </div>
     </>
   );

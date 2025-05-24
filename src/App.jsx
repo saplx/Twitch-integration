@@ -4,10 +4,12 @@ import DragAndDropImages from "./components/UI/DragAndDropField/DragAndDropImage
 import { useAuthToken } from "./hooks/useAuthToken";
 import { useTwitchChat } from "./hooks/useTwitchChat";
 import Tournament from "./components/Tournament";
+import ImageList from "./components/ImageList";
 
 function App() {
   const [isStartVote, setStartVote] = useState(false);
   const [images, setImages] = useState([]);
+  const [descriptions, setDescriptions] = useState(images.map(() => ""));
 
   const token = useAuthToken();
   const messages = useTwitchChat(token, "shiko_cx", "shiko_cx");
@@ -29,6 +31,11 @@ function App() {
     );
   }
 
+  const handleClear = () => {
+    setImages([]);
+    setDescriptions([]);
+  };
+
   return (
     <>
       {!isStartVote ? (
@@ -37,28 +44,19 @@ function App() {
             <h2>Чат подключён</h2>
           </div>
           <DragAndDropImages setImages={setImages} />
-          <div style={{ display: "flex", gap: 10, margin: 10 }}>
-            {images.map((url, idx) => (
-              <div key={idx}>
-                <img src={url} alt="" width={100} />
-              </div>
-            ))}
-          </div>
+          <ImageList
+            images={images}
+            description={descriptions}
+            setDescription={setDescriptions}
+          />
           <div style={{ display: "flex", gap: 5, marginTop: 15 }}>
             <MyButton onClick={() => setStartVote(true)}>Таймер</MyButton>
-            <MyButton
-              onClick={() => {
-                setStartVote(true);
-              }}
-            >
-              Вручную
-            </MyButton>
-            <MyButton onClick={() => setImages([])}>Очистить</MyButton>
+            <MyButton onClick={() => handleClear()}>Очистить</MyButton>
           </div>{" "}
         </>
       ) : (
         <div>
-          <Tournament images={images} />
+          <Tournament images={images} descriptions={descriptions} />
         </div>
       )}
     </>
