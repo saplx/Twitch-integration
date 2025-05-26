@@ -42,8 +42,14 @@ const Tournament = ({ images, messages }) => {
   const leftImg = currentImages[pairIndex];
   const rightImg = currentImages[pairIndex + 1];
 
+  useEffect(() => {
+    if (leftImg && !rightImg) {
+      handleSelect(leftImg);
+    }
+  }, [leftImg, rightImg]);
+
   if (leftImg && !rightImg) {
-    handleSelect(leftImg);
+    return null;
   }
 
   if (winner) {
