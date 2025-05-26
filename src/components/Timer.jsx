@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 
-const Timer = ({ initialSeconds = 30 }) => {
+const Timer = ({ initialSeconds = 30, resetTrigger = 0, setExpired }) => {
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
 
   useEffect(() => {
+    setSecondsLeft(initialSeconds);
+  }, [resetTrigger, initialSeconds]);
+
+  useEffect(() => {
     if (secondsLeft <= 0) {
+      setExpired(true);
       return;
     }
 

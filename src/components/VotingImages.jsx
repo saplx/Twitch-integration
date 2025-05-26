@@ -1,5 +1,4 @@
 import styles from "./VotingImages.module.css";
-import Timer from "./Timer";
 
 export default function VotingImages({ leftSrc, rightSrc, onVote }) {
   const handleClick = (imgObj) => {
@@ -37,7 +36,6 @@ export default function VotingImages({ leftSrc, rightSrc, onVote }) {
         <div>{leftSrc.description}</div>
         <div>{rightSrc.description}</div>
       </div>
-      <Timer />
     </>
   );
 }
