@@ -18,11 +18,11 @@ const Timer = ({ initialSeconds = 30, resetTrigger = 0, setExpired }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [secondsLeft]);
+  }, [secondsLeft, setExpired]);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <span style={{ fontWeight: "bold" }}>{secondsLeft}</span>
+      <span style={{ fontWeight: "bold", fontSize: 30 }}>{secondsLeft}</span>
     </div>
   );
 };

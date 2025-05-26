@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import MyButton from "./components/UI/Button/MyButton";
 import DragAndDropImages from "./components/UI/DragAndDropField/DragAndDropImages";
 import { useAuthToken } from "./hooks/useAuthToken";
-import { useTwitchChat } from "./hooks/useTwitchChat";
 import Tournament from "./components/Tournament";
 import ImageList from "./components/EditableImageList";
 
@@ -11,7 +10,6 @@ function App() {
   const [images, setImages] = useState([]);
 
   const token = useAuthToken();
-  const messages = useTwitchChat(token, "shiko_cx", "shiko_cx");
 
   useEffect(() => {
     return () => {
@@ -46,7 +44,7 @@ function App() {
         </>
       ) : (
         <div>
-          <Tournament images={images} messages={messages} />
+          <Tournament images={images} token={token} />
         </div>
       )}
     </>

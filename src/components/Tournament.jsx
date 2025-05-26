@@ -2,16 +2,23 @@ import { useCallback, useEffect, useState } from "react";
 import VotingImages from "./VotingImages";
 import Timer from "./Timer";
 import VoteCounter from "./VoteCounter";
+import { useVoteStats } from "../hooks/useVoteStats";
+import { useTwitchChat } from "../hooks/useTwitchChat";
+import MyButton from "./UI/Button/MyButton";
 
-const Tournament = ({ images, messages }) => {
+const Tournament = ({ images, token }) => {
   const [currentImages, setCurrentImages] = useState(images);
   const [nextStageImages, setNextStageImages] = useState([]);
   const [pairIndex, setPairIndex] = useState(0);
   const [winner, setWinner] = useState(null);
-  const [votes, setVotes] = useState([]);
+  const messages = useTwitchChat(token, "shiko_cx", "shiko_cx");
 
   const [resetTimerTrigger, setResetTimerTrigger] = useState(0);
   const [expired, setExpired] = useState(false);
+  const { leftCount, rightCount, leftPct, rightPct } = useVoteStats(
+    messages,
+    expired
+  );
 
   const handleSelect = useCallback(
     (selected) => {
@@ -38,25 +45,25 @@ const Tournament = ({ images, messages }) => {
   const leftImg = currentImages[pairIndex];
   const rightImg = currentImages[pairIndex + 1];
 
+  const nextRound = () => {
+    if (leftCount > rightCount) {
+      handleSelect(leftImg);
+      setResetTimerTrigger((prev) => prev + 1);
+      setExpired(false);
+    }
+
+    if (leftCount < rightCount) {
+      handleSelect(rightImg);
+      setResetTimerTrigger((prev) => prev + 1);
+      setExpired(false);
+    }
+  };
+
   useEffect(() => {
     if (leftImg && !rightImg) {
       handleSelect(leftImg);
     }
   }, [leftImg, rightImg, handleSelect]);
-
-  useEffect(() => {
-    if (messages.length === 0) return;
-
-    const last = messages[messages.length - 1];
-
-    if (
-      !expired &&
-      !votes.some((v) => v.user === last.nick) &&
-      (last.message === "1" || last.message === "2")
-    ) {
-      setVotes((prev) => [...prev, { user: last.nick, vote: last.message }]);
-    }
-  }, [messages, votes, expired]);
 
   if (leftImg && !rightImg) {
     return null;
@@ -85,17 +92,28 @@ const Tournament = ({ images, messages }) => {
   return (
     <>
       <div className="content">
+        <span style={{ display: "flex", justifyContent: "center" }}>
+          Голоса учитываются только во время обратного отсчета
+        </span>
         <VotingImages
           leftSrc={leftImg}
           rightSrc={rightImg}
           onVote={handleSelect}
         />
         <Timer
-          initialSeconds={30}
+          initialSeconds={10}
           resetTrigger={resetTimerTrigger}
           setExpired={setExpired}
         />
-        <VoteCounter votes={votes} />
+        <VoteCounter
+          leftCount={leftCount}
+          rightCount={rightCount}
+          leftPercent={leftPct}
+          rightPercent={rightPct}
+        />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <MyButton onClick={() => nextRound()}>Следующий раунд</MyButton>
+        </div>
       </div>
     </>
   );

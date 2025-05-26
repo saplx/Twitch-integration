@@ -33,8 +33,8 @@ export default function VotingImages({ leftSrc, rightSrc, onVote }) {
         </button>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        <div>{leftSrc.description}</div>
-        <div>{rightSrc.description}</div>
+        <div style={{ whiteSpace: "pre-wrap" }}>{leftSrc.description}</div>
+        <div style={{ whiteSpace: "pre-wrap" }}>{rightSrc.description}</div>
       </div>
     </>
   );
