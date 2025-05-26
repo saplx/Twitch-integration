@@ -1,64 +1,81 @@
 import { useEffect, useState } from "react";
-import MyButton from "./UI/Button/MyButton";
 import VotingImages from "./VotingImages";
 
-const Tournament = ({ images, descriptions }) => {
-  const [currentRound, setCurrentRound] = useState(images);
-  const [nextRound, setNextRound] = useState([]);
-  const [winner, setWinner] = useState(null);
+const Tournament = ({ images, messages }) => {
+  const [currentImages, setCurrentImages] = useState(images);
+  const [nextStageImages, setNextStageImages] = useState([]);
   const [pairIndex, setPairIndex] = useState(0);
+  const [winner, setWinner] = useState(null);
 
-  const totalRounds = Math.ceil(images.length / 2);
+  const [votes, setVotes] = useState([]);
 
   const handleSelect = (selected) => {
-    const updatedNextRound = [...nextRound, selected];
+    const updatedNextRound = [...nextStageImages, selected];
 
-    if (pairIndex + 2 >= currentRound.length) {
+    if (pairIndex + 2 >= currentImages.length) {
       if (updatedNextRound.length === 1) {
-        setWinner(updatedNextRound[0]);
+        setWinner(selected);
       } else {
-        setCurrentRound(updatedNextRound);
-        setNextRound([]);
+        setCurrentImages(updatedNextRound);
+        setNextStageImages([]);
         setPairIndex(0);
       }
     } else {
-      setNextRound((prev) => [...prev, selected]);
+      setNextStageImages((prev) => [...prev, selected]);
       setPairIndex((prev) => prev + 2);
     }
   };
 
-  const leftImg = currentRound[pairIndex];
-  const rightImg = currentRound[pairIndex + 1];
-
   useEffect(() => {
-    if (leftImg && !rightImg) {
-      handleSelect(leftImg);
+    if (messages.length === 0) return;
+
+    const last = messages[messages.length - 1];
+
+    if (
+      !votes.some((v) => v.user === last.nick) &&
+      (last.message === "1" || last.message === "2")
+    ) {
+      setVotes((prev) => [...prev, { user: last.nick, vote: last.message }]);
     }
-  }, [currentRound, pairIndex]);
+  }, [messages, votes]);
+
+  const leftImg = currentImages[pairIndex];
+  const rightImg = currentImages[pairIndex + 1];
+
+  if (leftImg && !rightImg) {
+    handleSelect(leftImg);
+  }
 
   if (winner) {
     return (
       <div style={{ alignItems: "center" }}>
-        <h1>Победители</h1>
-        <img style={{ maxWidth: 800 }} src={winner} alt="Победитель" />
+        <h1>Победитель:</h1>
+        {
+          <>
+            <img
+              key={winner.url}
+              style={{ maxWidth: 800 }}
+              src={winner.url}
+              alt="Победитель"
+            />
+            <span>{winner.description}</span>
+          </>
+        }
+        <div style={{ display: "flex", justifyContent: "center" }}></div>
       </div>
     );
   }
 
   return (
     <>
-      <h1>{`Раунд ${pairIndex / 2 + 1} из ${totalRounds}`}</h1>
       <div className="content">
         <VotingImages
           leftSrc={leftImg}
           rightSrc={rightImg}
           onVote={handleSelect}
         />
-        <div>{descriptions[pairIndex]}</div>
-        <div>{descriptions[pairIndex]}</div>
       </div>
     </>
   );
 };
-
 export default Tournament;

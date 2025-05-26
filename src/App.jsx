@@ -4,12 +4,11 @@ import DragAndDropImages from "./components/UI/DragAndDropField/DragAndDropImage
 import { useAuthToken } from "./hooks/useAuthToken";
 import { useTwitchChat } from "./hooks/useTwitchChat";
 import Tournament from "./components/Tournament";
-import ImageList from "./components/ImageList";
+import ImageList from "./components/EditableImageList";
 
 function App() {
   const [isStartVote, setStartVote] = useState(false);
   const [images, setImages] = useState([]);
-  const [descriptions, setDescriptions] = useState(images.map(() => ""));
 
   const token = useAuthToken();
   const messages = useTwitchChat(token, "shiko_cx", "shiko_cx");
@@ -22,19 +21,14 @@ function App() {
 
   if (!token) {
     const clientId = "bzwyt04fh0h7io575i24xwzbzpfkl7";
-    const redirectUri = encodeURIComponent("http://localhost:5173/");
-    const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=chat:read`;
+    const redirectUrl = encodeURIComponent("http://localhost:5173/");
+    const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=token&scope=chat:read`;
     return (
       <div style={{ padding: 20 }}>
         <a href={authUrl}>Авторизоваться через Twitch</a>
       </div>
     );
   }
-
-  const handleClear = () => {
-    setImages([]);
-    setDescriptions([]);
-  };
 
   return (
     <>
@@ -44,19 +38,15 @@ function App() {
             <h2>Чат подключён</h2>
           </div>
           <DragAndDropImages setImages={setImages} />
-          <ImageList
-            images={images}
-            description={descriptions}
-            setDescription={setDescriptions}
-          />
+          <ImageList images={images} setImages={setImages} />
           <div style={{ display: "flex", gap: 5, marginTop: 15 }}>
             <MyButton onClick={() => setStartVote(true)}>Таймер</MyButton>
-            <MyButton onClick={() => handleClear()}>Очистить</MyButton>
+            <MyButton onClick={() => setImages([])}>Очистить</MyButton>
           </div>{" "}
         </>
       ) : (
         <div>
-          <Tournament images={images} descriptions={descriptions} />
+          <Tournament images={images} messages={messages} />
         </div>
       )}
     </>

@@ -8,8 +8,13 @@ const DragAndDropImages = ({ setImages }) => {
     const files = Array.from(fileList).filter((f) =>
       f.type.startsWith("image/")
     );
-    const urls = files.map((file) => URL.createObjectURL(file));
-    setImages((prev) => [...prev, ...urls]);
+
+    const newImages = files.map((file) => {
+      const url = URL.createObjectURL(file);
+      return { url, description: "" };
+    });
+
+    setImages((prev) => [...prev, ...newImages]);
   };
 
   return (
@@ -18,7 +23,7 @@ const DragAndDropImages = ({ setImages }) => {
       onDrop={handleDrop}
       style={{ border: "2px dashed #ccc", padding: 20, textAlign: "center" }}
     >
-      Перетащите изображения сюда или{" "}
+      {"Перетащите изображения сюда или "}
       <input
         type="file"
         accept="image/*"
