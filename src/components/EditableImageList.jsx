@@ -7,6 +7,10 @@ const EditableImageList = ({ images, setImages }) => {
     });
   };
 
+  const handleRemove = (i) => {
+    setImages((prev) => prev.filter((_, idx) => idx !== i));
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", margin: 10 }}>
       {images.map((img, i) => (
@@ -18,6 +22,9 @@ const EditableImageList = ({ images, setImages }) => {
           }}
           key={img.url}
         >
+          <button style={{ padding: 10 }} onClick={() => handleRemove(i)}>
+            x
+          </button>
           <img src={img.url} alt="" width={140} />
           <textarea
             style={{ padding: 10, resize: "none" }}
