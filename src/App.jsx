@@ -3,7 +3,7 @@ import MyButton from "./components/UI/Button/MyButton";
 import DragAndDropImages from "./components/UI/DragAndDropField/DragAndDropImages";
 import { useAuthToken } from "./hooks/useAuthToken";
 import Tournament from "./components/Tournament";
-import ImageList from "./components/EditableImageList";
+import EditableImageList from "./components/EditableImageList";
 
 function App() {
   const [isStartVote, setStartVote] = useState(false);
@@ -36,15 +36,15 @@ function App() {
             <h2>Чат подключён</h2>
           </div>
           <DragAndDropImages setImages={setImages} />
-          <ImageList images={images} setImages={setImages} />
           <div style={{ display: "flex", gap: 5, marginTop: 15 }}>
             <MyButton onClick={() => setStartVote(true)}>Таймер</MyButton>
             <MyButton onClick={() => setImages([])}>Очистить</MyButton>
-          </div>{" "}
+          </div>
+          <EditableImageList images={images} setImages={setImages} />
         </>
       ) : (
         <div>
-          <Tournament images={images} token={token} />
+          <Tournament images={images} token={token} timePerRound={30} />
         </div>
       )}
     </>

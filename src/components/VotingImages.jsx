@@ -14,7 +14,7 @@ export default function VotingImages({ leftSrc, rightSrc, onVote }) {
           onClick={() => handleClick(leftSrc)}
         >
           <img
-            src={leftSrc.url}
+            src={leftSrc?.url}
             alt="Первый участник"
             className={styles.image}
           />
@@ -26,15 +26,33 @@ export default function VotingImages({ leftSrc, rightSrc, onVote }) {
           onClick={() => handleClick(rightSrc)}
         >
           <img
-            src={rightSrc.url}
+            src={rightSrc?.url}
             alt="Второй участник"
             className={styles.image}
           />
         </button>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        <div style={{ whiteSpace: "pre-wrap" }}>{leftSrc.description}</div>
-        <div style={{ whiteSpace: "pre-wrap" }}>{rightSrc.description}</div>
+        <div
+          style={{
+            whiteSpace: "pre-wrap",
+            boxSizing: "border-box",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {leftSrc?.description}
+        </div>
+        <div
+          style={{
+            whiteSpace: "pre-wrap",
+            boxSizing: "border-box",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {rightSrc?.description}
+        </div>
       </div>
     </>
   );
