@@ -1,32 +1,37 @@
 import { useEffect, useMemo, useState } from "react";
 
-export function useVoteStats(messages, expired) {
+export function useVoteStats(messages, expired, round) {
   const [votes, setVotes] = useState([]);
 
   useEffect(() => {
+    setVotes([]);
+  }, [round]);
+
+  useEffect(() => {
+    if (expired) return;
     if (messages.length === 0) return;
-    const last = messages[messages.length - 1];
+
+    const { nick, message } = messages[messages.length - 1];
+
+    const collapsed = message.replace(/([12])\1*/g, "$1");
 
     if (
-      !expired &&
-      !votes.some((v) => v.user === last.nick) &&
-      (last.message === "1" || last.message === "2")
+      (collapsed === "1" || collapsed === "2") &&
+      !votes.find((v) => v.user === nick)
     ) {
-      setVotes((prev) => [...prev, { user: last.nick, vote: last.message }]);
+      setVotes((prev) => [...prev, { user: nick, vote: collapsed }]);
     }
-  }, [messages, votes, expired]);
+  }, [messages, expired]);
 
   return useMemo(() => {
-    const leftCount = votes.filter((v) => v.vote === "1").length;
-    const rightCount = votes.length - leftCount;
     const total = votes.length;
-    const leftPercent = total ? Math.round((leftCount / total) * 100) : 0;
-    const rightPercent = total ? 100 - leftPercent : 0;
+    const leftCount = votes.filter((v) => v.vote === "1").length;
+    const leftPct = total ? Math.round((leftCount / total) * 100) : 0;
     return {
       leftCount,
-      rightCount,
-      leftPct: leftPercent,
-      rightPct: rightPercent,
+      rightCount: total - leftCount,
+      leftPct,
+      rightPct: total ? 100 - leftPct : 0,
       total,
     };
   }, [votes]);

@@ -17,7 +17,8 @@ const Tournament = ({ images, token, timePerRound }) => {
   const [expired, setExpired] = useState(false);
   const { leftCount, rightCount, leftPct, rightPct } = useVoteStats(
     messages,
-    expired
+    expired,
+    round
   );
 
   const handleSelect = useCallback(
