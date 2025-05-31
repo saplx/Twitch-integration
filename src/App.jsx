@@ -19,7 +19,9 @@ function App() {
 
   if (!token) {
     const clientId = "bzwyt04fh0h7io575i24xwzbzpfkl7";
-    const redirectUrl = encodeURIComponent("http://localhost:5173/");
+    const redirectUrl = encodeURIComponent(
+      "https://saplx.github.io/Twitch-integration/"
+    );
     const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=token&scope=chat:read`;
     return (
       <div style={{ padding: 20 }}>
