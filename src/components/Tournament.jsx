@@ -6,12 +6,13 @@ import { useVoteStats } from "../hooks/useVoteStats";
 import { useTwitchChat } from "../hooks/useTwitchChat";
 import MyButton from "./UI/Button/MyButton";
 
-const Tournament = ({ images, token, timePerRound }) => {
+const Tournament = ({ images, timePerRound, token, login }) => {
   const [currentImages, setCurrentImages] = useState(images);
   const [selectedImages, setSelectedStageImages] = useState([]);
   const [pairIndex, setPairIndex] = useState(0);
   const [winner, setWinner] = useState(null);
-  const messages = useTwitchChat(token, "shiko_cx", "shiko_cx");
+
+  const messages = useTwitchChat(token, login, login);
 
   const [round, setRound] = useState(1);
   const [expired, setExpired] = useState(false);

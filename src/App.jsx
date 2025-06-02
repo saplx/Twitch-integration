@@ -4,12 +4,18 @@ import DragAndDropImages from "./components/UI/DragAndDropField/DragAndDropImage
 import { useAuthToken } from "./hooks/useAuthToken";
 import Tournament from "./components/Tournament";
 import EditableImageList from "./components/EditableImageList";
+import useTwitchLoginFromToken from "./hooks/useTwitchLoginFromToken";
 
 function App() {
   const [isStartVote, setStartVote] = useState(false);
   const [images, setImages] = useState([]);
 
   const token = useAuthToken();
+  const {
+    login,
+    loading: loginLoading,
+    error: loginError,
+  } = useTwitchLoginFromToken(token);
 
   useEffect(() => {
     return () => {
@@ -17,11 +23,21 @@ function App() {
     };
   }, [images]);
 
-  if (!token) {
-    const clientId = "bzwyt04fh0h7io575i24xwzbzpfkl7";
-    const redirectUrl = encodeURIComponent(
-      "https://saplx.github.io/Twitch-integration/"
+  if (loginLoading) {
+    return <div>Получаем ваш ник из Twitch...</div>;
+  }
+
+  if (loginError) {
+    return (
+      <div style={{ color: "red" }}>
+        Не удалось определить ник: {loginError}
+      </div>
     );
+  }
+
+  if (!token) {
+    const clientId = "on71igyuj4apxm7tn09o7w6bdl8k3v";
+    const redirectUrl = encodeURIComponent("http://localhost:5174");
     const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=token&scope=chat:read`;
     return (
       <div style={{ padding: 20 }}>
@@ -45,8 +61,13 @@ function App() {
           <EditableImageList images={images} setImages={setImages} />
         </>
       ) : (
-        <div>
-          <Tournament images={images} token={token} timePerRound={30} />
+        <div style={{ maxWidth: 1400 }}>
+          <Tournament
+            images={images}
+            timePerRound={30}
+            token={token}
+            login={login}
+          />
         </div>
       )}
     </>
