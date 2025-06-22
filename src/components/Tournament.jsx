@@ -70,42 +70,14 @@ const Tournament = ({ images, timePerRound, token, login }) => {
 
   if (winner) {
     return (
-      <div style={{ alignItems: "center" }}>
-        <h1
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: 10,
-            fontSize: 50,
-          }}
-        >
-          Победитель:
-        </h1>
-        {
-          <>
-            <img
-              key={winner.url}
-              style={{ maxWidth: 800 }}
-              src={winner.url}
-              alt="Победитель"
-            />
-            <span
-              style={{
-                whiteSpace: "pre-wrap",
-                width: "100%",
-                textAlign: "center",
-                display: "flex",
-                justifyContent: "center",
-                margin: 10,
-                fontSize: 20,
-              }}
-            >
-              {winner.description}
-            </span>
-          </>
-        }
-
-        <div style={{ display: "flex", justifyContent: "center" }}></div>
+      <div className="flex flex-col items-center p-6">
+        <h1 className="text-4xl font-bold mb-4">Победитель:</h1>
+        <img
+          src={winner.url}
+          alt={winner.description || "Победитель"}
+          className="w-auto max-h-[70vh] shadow mb-4"
+        />
+        <p className="text-center text-lg whitespace-pre-wrap">{winner.description}</p>
       </div>
     );
   }
@@ -120,35 +92,39 @@ const Tournament = ({ images, timePerRound, token, login }) => {
   };
 
   return (
-    <>
-      <div className="content">
-        <h2 style={{ display: "flex", justifyContent: "center" }}>
-          Раунд {round} из {calcRounds(images.length)}
-        </h2>
-        <span style={{ display: "flex", justifyContent: "center" }}>
-          Голоса учитываются только во время обратного отсчета
-        </span>
-        <VotingImages
-          leftSrc={leftImg}
-          rightSrc={rightImg}
-          onVote={handleSelect}
-        />
+    <div className="container mx-auto px-4 py-6">
+      <h2 className="text-center text-3xl font-bold mb-2">
+        Раунд {round} из {calcRounds(images.length)}
+      </h2>
+      <p className="text-center text-sm text-gray-500 mb-4">
+        Голоса учитываются только во время обратного отсчёта
+      </p>
+
+      <VotingImages
+        leftSrc={leftImg}
+        rightSrc={rightImg}
+        onVote={handleSelect}
+      />
+
+      <div className="flex justify-center mt-4">
         <Timer
           initialSeconds={timePerRound}
           resetTrigger={round}
           setExpired={setExpired}
         />
-        <VoteCounter
-          leftCount={leftCount}
-          rightCount={rightCount}
-          leftPercent={leftPct}
-          rightPercent={rightPct}
-        />
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <MyButton onClick={() => nextRound()}>Следующий раунд</MyButton>
-        </div>
       </div>
-    </>
+
+      <VoteCounter
+        leftCount={leftCount}
+        rightCount={rightCount}
+        leftPercent={leftPct}
+        rightPercent={rightPct}
+      />
+
+      <div className="flex justify-center mt-6">
+        <MyButton onClick={nextRound}>Следующий раунд</MyButton>
+      </div>
+    </div>
   );
 };
 export default Tournament;

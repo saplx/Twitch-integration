@@ -21,8 +21,8 @@ const Timer = ({ initialSeconds = 30, resetTrigger = 0, setExpired }) => {
   }, [secondsLeft, setExpired]);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <span style={{ fontWeight: "bold", fontSize: 30 }}>{secondsLeft}</span>
+    <div className="items-center">
+      <span className="font-bold text-3xl">{secondsLeft}</span>
     </div>
   );
 };

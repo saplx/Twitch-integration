@@ -1,13 +1,12 @@
 const VoteCounter = ({ leftCount, rightCount, leftPercent, rightPercent }) => (
   <div
-    className="voting-results"
-    style={{ display: "flex", justifyContent: "space-around" }}
+    className="voting-results flex justify-around"
   >
     <div>
-      Левый: {leftCount} ({leftPercent}%)
+      {leftCount} ({leftPercent}%)
     </div>
     <div>
-      Правый: {rightCount} ({rightPercent}%)
+      {rightCount} ({rightPercent}%)
     </div>
   </div>
 );

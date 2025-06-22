@@ -2,20 +2,17 @@ import { useEffect, useState } from "react";
 import MyButton from "./components/UI/Button/MyButton";
 import DragAndDropImages from "./components/UI/DragAndDropField/DragAndDropImages";
 import { useAuthToken } from "./hooks/useAuthToken";
+import useTwitchLoginFromToken from "./hooks/useTwitchLoginFromToken";
 import Tournament from "./components/Tournament";
 import EditableImageList from "./components/EditableImageList";
-import useTwitchLoginFromToken from "./hooks/useTwitchLoginFromToken";
 
 function App() {
   const [isStartVote, setStartVote] = useState(false);
   const [images, setImages] = useState([]);
-
+  const [timePerRound, setTimePerRound] = useState(30);
   const token = useAuthToken();
-  const {
-    login,
-    loading: loginLoading,
-    error: loginError,
-  } = useTwitchLoginFromToken(token);
+  const { login, loading: loginLoading, error: loginError } =
+    useTwitchLoginFromToken(token);
 
   useEffect(() => {
     return () => {
@@ -24,13 +21,17 @@ function App() {
   }, [images]);
 
   if (loginLoading) {
-    return <div>Получаем ваш ник из Twitch...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-gray-400">Получаем ваш ник из Twitch...</p>
+      </div>
+    );
   }
 
   if (loginError) {
     return (
-      <div style={{ color: "red" }}>
-        Не удалось определить ник: {loginError}
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-500">Не удалось определить ник: {loginError}</p>
       </div>
     );
   }
@@ -40,37 +41,64 @@ function App() {
     const redirectUrl = encodeURIComponent("http://localhost:5174");
     const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=token&scope=chat:read`;
     return (
-      <div style={{ padding: 20 }}>
-        <a href={authUrl}>Авторизоваться через Twitch</a>
+      <div className="flex items-center justify-center h-screen">
+        <a
+          href={authUrl}
+          className="px-6 py-3 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+        >
+          Авторизоваться через Twitch
+        </a>
       </div>
     );
   }
 
+  const onChangeTime = (e) => {
+  const val = Number(e.target.value);
+  setTimePerRound(val < 10 ? 10 : val);
+}
+
   return (
-    <>
+    <main className="container mx-auto px-4 py-8">
       {!isStartVote ? (
         <>
-          <div style={{ padding: 20 }}>
-            <h2>Чат подключён</h2>
+          <div className="mb-6 flex flex-col items-center">
+            <h2 className="text-2xl font-semibold text-white">Чат подключён</h2>
+            <DragAndDropImages setImages={setImages} />
+            
+            
+            <div className="flex items-center mt-3 gap-2 border-dashed border-gray-300">
+              <label htmlFor="timePerRound" className="text-white p-2.5">
+                Время на раунд (сек):
+              </label>
+              <input
+                type="number"
+                id="timePerRound"
+                min={10}
+                value={timePerRound}
+                onChange={onChangeTime}
+                className="w-20 px-2 py-1 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+            <div className="flex flex-row items-center gap-4 mt-4">
+              <MyButton onClick={() => setStartVote(true)}>Таймер</MyButton>
+              <MyButton onClick={() => setImages([])}>Очистить</MyButton>
+            </div>
           </div>
-          <DragAndDropImages setImages={setImages} />
-          <div style={{ display: "flex", gap: 5, marginTop: 15 }}>
-            <MyButton onClick={() => setStartVote(true)}>Таймер</MyButton>
-            <MyButton onClick={() => setImages([])}>Очистить</MyButton>
+          <div className="mt-6">
+            <EditableImageList images={images} setImages={setImages} />
           </div>
-          <EditableImageList images={images} setImages={setImages} />
         </>
       ) : (
-        <div style={{ maxWidth: 1400 }}>
+        <div className="max-w-[1400px] mx-auto">
           <Tournament
             images={images}
-            timePerRound={30}
+            timePerRound={timePerRound}
             token={token}
             login={login}
           />
         </div>
       )}
-    </>
+    </main>
   );
 }
 

@@ -1,4 +1,3 @@
-import styles from "./VotingImages.module.css";
 
 export default function VotingImages({ leftSrc, rightSrc, onVote }) {
   const handleClick = (imgObj) => {
@@ -7,49 +6,37 @@ export default function VotingImages({ leftSrc, rightSrc, onVote }) {
 
   return (
     <>
-      <div className={styles.container}>
-        <button
+      <div className="w-full justify-center flex gap-5">
+        <button className="flex overflow-hidden"
           type="button"
-          className={styles.imageWrapper}
           onClick={() => handleClick(leftSrc)}
         >
           <img
             src={leftSrc?.url}
             alt="Первый участник"
-            className={styles.image}
+            className="max-w-full max-h-[70vh] w-auto h-auto object-contain cursor-pointer hover:scale-105 duration-200 ease-in-out"
           />
         </button>
         <button
+          className="flex overflow-hidden"
           type="button"
-          style={{ background: "#111", borderRadius: 5 }}
-          className={styles.imageWrapper}
           onClick={() => handleClick(rightSrc)}
         >
           <img
+            className="max-w-full max-h-[70vh] w-auto h-auto object-contain cursor-pointer hover:scale-105 duration-200 ease-in-out"
             src={rightSrc?.url}
             alt="Второй участник"
-            className={styles.image}
           />
         </button>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div className="flex justify-around mt-4">
         <div
-          style={{
-            whiteSpace: "pre-wrap",
-            boxSizing: "border-box",
-            width: "100%",
-            textAlign: "center",
-          }}
+        className="whitespace-pre-wrap text-center box-border w-full"
         >
           {leftSrc?.description}
         </div>
         <div
-          style={{
-            whiteSpace: "pre-wrap",
-            boxSizing: "border-box",
-            width: "100%",
-            textAlign: "center",
-          }}
+        className="whitespace-pre-wrap text-center box-border w-full"
         >
           {rightSrc?.description}
         </div>
